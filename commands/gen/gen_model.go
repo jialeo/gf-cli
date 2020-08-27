@@ -176,6 +176,16 @@ import (
 	} else {
 		mlog.Print("generated:", path)
 	}
+	// func
+	path = gfile.Join(folderPath, packageName, fileName+"_func.go")
+	funcContent := gstr.ReplaceByMap(templateFuncContent, g.MapStrStr{
+		"{TplPackageName}":    packageName,
+	})
+	if err := gfile.PutContents(path, strings.TrimSpace(funcContent)); err != nil {
+		mlog.Fatalf("writing content to '%s' failed: %v", path, err)
+	} else {
+		mlog.Print("generated:", path)
+	}
 }
 
 // generateStructDefinition generates and returns the struct definition for specified table.
