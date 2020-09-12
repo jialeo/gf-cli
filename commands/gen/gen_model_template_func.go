@@ -9,9 +9,9 @@ package {TplPackageName}
 
 import (
 	"database/sql"
+	"git.ping-qu.cn/golang/gf-package/page"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/gtime"
-	"iot-message-distribution/app"
 	"math"
 )
 
@@ -38,17 +38,17 @@ func (m *arModel) SoftDeleteData(data g.Map) (result sql.Result, err error) {
 }
 
 //获取所有数据
-func (m *arModel) Get() (result jModel, err error) {
+func (m *arModel) Get() (result JModel, err error) {
 	list, err := m.All()
 
-	return jModel{
+	return JModel{
 		List: list,
 	}, err
 }
 
 //获取分页
-func (m *arModel) GetPage(page int, pagesize int) (result jModel, err error) {
-	list, err := m.Page(page, pagesize).All()
+func (m *arModel) GetPage(nowPage int, pagesize int) (result JModel, err error) {
+	list, err := m.Page(nowPage, pagesize).All()
 	if err != nil {
 		return result, err
 	}
@@ -61,11 +61,11 @@ func (m *arModel) GetPage(page int, pagesize int) (result jModel, err error) {
 	//计算总页数
 	pagecount := int(math.Ceil(float64(count) / float64(pagesize)))
 
-	return jModel{
+	return JModel{
 		List: list,
-		Page: app.Page{
+		Page: page.Page{
 			Total:       count,
-			CurrentPage: page,
+			CurrentPage: nowPage,
 			PageSize:    pagesize,
 			TotalPage:   pagecount,
 			CurrentSize: len(list),
@@ -73,14 +73,14 @@ func (m *arModel) GetPage(page int, pagesize int) (result jModel, err error) {
 	}, nil
 }
 
-type jModel struct {
+type JModel struct {
 	List []*Entity
 
-	Page app.Page
+	Page page.Page
 }
 
 //获取一条
-func (j jModel) FindOne(callback func(*Entity) bool) *Entity {
+func (j JModel) FindOne(callback func(*Entity) bool) *Entity {
 
 	for _, item := range j.List {
 		if callback(item) {
@@ -92,7 +92,7 @@ func (j jModel) FindOne(callback func(*Entity) bool) *Entity {
 }
 
 //过滤列表
-func (j jModel) Filter(callback func(*Entity) bool) []*Entity {
+func (j JModel) Filter(callback func(*Entity) bool) []*Entity {
 
 	filterList := []*Entity{}
 
