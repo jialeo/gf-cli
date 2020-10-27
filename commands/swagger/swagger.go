@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gogf/gf-cli/library/mlog"
-	"github.com/gogf/gf-swagger/swagger"
 	"github.com/gogf/gf/container/gtype"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/gcmd"
@@ -14,12 +13,13 @@ import (
 	"github.com/gogf/gf/os/gtime"
 	"github.com/gogf/gf/os/gtimer"
 	"github.com/gogf/gf/text/gstr"
+	"github.com/gogf/swagger"
 )
 
 const (
 	defaultOutput    = "./swagger"
 	swaggoRepoPath   = "github.com/swaggo/swag/cmd/swag"
-	packedGoFileName = "swagger.go"
+	PackedGoFileName = "swagger.go"
 )
 
 func Help() {
@@ -123,6 +123,7 @@ func generateSwaggerFiles(output string, pack bool) error {
 			return err
 		}
 	}
+	// Generate swagger files using swag.
 	command := fmt.Sprintf(`swag init -o %s`, tempOutputPath)
 	result, err := gproc.ShellExec(command)
 	if err != nil {
@@ -141,9 +142,9 @@ func generateSwaggerFiles(output string, pack bool) error {
 		return err
 	}
 	mlog.Print(`done!`)
-	// Auto pack.
+	// Auto pack into go file.
 	if pack && gfile.Exists("swagger") {
-		packCmd := fmt.Sprintf(`gf pack %s packed/%s`, "swagger", packedGoFileName)
+		packCmd := fmt.Sprintf(`gf pack %s packed/%s -n packed`, "swagger", PackedGoFileName)
 		mlog.Print(packCmd)
 		if err := gproc.ShellRun(packCmd); err != nil {
 			return err
