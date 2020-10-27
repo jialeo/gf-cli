@@ -13,7 +13,15 @@ import (
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/os/gtime"
 	"math"
+	"strings"
 )
+
+//设置字段
+func (m *arModel) SetFields(fields... string) *arModel {
+	getFields := strings.Join(fields, ",")
+
+	return m.Fields(getFields)
+}
 
 //保存数据
 func (m *arModel) SaveData(data g.Map) (result sql.Result, err error) {
