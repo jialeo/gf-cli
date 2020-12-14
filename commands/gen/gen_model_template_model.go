@@ -8,6 +8,7 @@ const templateModelContent = `
 package {TplPackageName}
 
 import (
+	"context"
 	"database/sql"
 	"github.com/gogf/gf/database/gdb"
 	"github.com/gogf/gf/frame/g"
@@ -32,6 +33,14 @@ var (
 		{TplColumnNames}
 	}
 )
+
+// Ctx is a chaining function, which creates and returns a new DB that is a shallow copy
+// of current DB object and with given context in it.
+// Note that this returned DB object can be used only once, so do not assign it to
+// a global or package variable for long using.
+func (m *arModel) Ctx(ctx context.Context) *arModel {
+	return &arModel{m.M.Ctx(ctx)}
+}
 
 // As sets an alias name for current table.
 func (m *arModel) As(as string) *arModel {
@@ -82,13 +91,13 @@ func (m *arModel) InnerJoin(table ...string) *arModel {
 }
 
 // Fields sets the operation fields of the model, multiple fields joined using char ','.
-func (m *arModel) Fields(fields ...string) *arModel {
-	return &arModel{m.M.Fields(fields...)}
+func (m *arModel) Fields(fieldNamesOrMapStruct ...interface{}) *arModel {
+	return &arModel{m.M.Fields(fieldNamesOrMapStruct...)}
 }
 
 // FieldsEx sets the excluded operation fields of the model, multiple fields joined using char ','.
-func (m *arModel) FieldsEx(fields ...string) *arModel {
-	return &arModel{m.M.FieldsEx(fields...)}
+func (m *arModel) FieldsEx(fieldNamesOrMapStruct ...interface{}) *arModel {
+	return &arModel{m.M.FieldsEx(fieldNamesOrMapStruct...)}
 }
 
 // Option sets the extra operation option for the model.
